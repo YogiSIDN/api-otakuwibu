@@ -4,6 +4,8 @@ app.use(express.json())
 // Backend
 const { tinyUrl } = require("./backend/shortURL")
 
+app.set("json spaces", 4)
+
 app.get("/api/tinyUrl", async (req, res) => {
     const { url } = req.query
     if (!url) {
