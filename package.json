@@ -1,0 +1,15 @@
+{
+  "name": "Yue-MD-SIMPLE-API",
+  "version": "1.0.0",
+  "description": "REST API untuk layanan short URL dan lainnya.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "iG @mysu_019",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "node-fetch": "^2.6.1"
+  }
+}
