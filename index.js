@@ -4,30 +4,21 @@ app.use(express.json())
 // Backend
 const { tinyUrl } = require("./backend/shortURL")
 
-app.get("/api/hello", (req, res) => {
-  res.json({ message: "Hello, World!" })
-})
-
-app.post("/api/greet", (req, res) => {
-  const { name } = req.body
-  if (!name) {
-    return res.status(400).json({ error: "Name is required" })
-  }
-  res.json({ message: `Hello, ${name}!` })
-})
-
 app.get("/api/tinyUrl", async (req, res) => {
     const { url } = req.query
     if (!url) {
-        return res.status(400).json({ error: "URL is required" })
+        return res.status(400).send(JSON.stringify({
+            message: "Berikan saya URL!"
+        }, null, 4))
     }
     try {
         const result = await tinyUrl(url)
-        res.json(result)
+        res.send(JSON.stringify(result, null, 4))
     } catch (error) {
-        res.status(500).json(error)
+        res.send(JSON.stringify(result, null, 4))
     }
 })
+
 
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
