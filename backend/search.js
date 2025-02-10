@@ -1,23 +1,15 @@
-const yts = require("yt-search");
+const ytSearch = require("youtube-search-api");
 
-async function ytsearch(query) {
+async function yts(query) {
     try {
-        const res = await yts.search(query);
-        if (!res.videos.length) {
-            return {
-                status: 404,
-                dev: "@mysu_019",
-                message: "Tidak ditemukan hasil untuk pencarian tersebut."
-            };
-        }
-
-        const videos = res.videos.slice(0, 10).map(video => ({
-            id: video.videoId,
+        const res = await ytSearch.GetListByKeyword(query, false, 10); 
+        const videos = res.items.map(video => ({
+            id: video.id,
             title: video.title,
-            duration: video.timestamp,
-            channel: video.author.name,
-            thumbnail: video.thumbnail,
-            link: video.url
+            duration: video.length.simpleText || "N/A",
+            channel: video.channelTitle,
+            thumbnail: video.thumbnail.thumbnails.pop().url,
+            link: `https://www.youtube.com/watch?v=${video.id}`
         }));
 
         return {
@@ -35,4 +27,4 @@ async function ytsearch(query) {
     }
 }
 
-module.exports = { youtube };
+module.exports = { yts }
