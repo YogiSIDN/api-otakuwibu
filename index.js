@@ -87,7 +87,6 @@ app.get("/api/spotifySearch", async (req, res) => {
         const result = await sps(q);
         res.status(result.status).json(result);
     } catch (error) {
-        console.error("Error in /api/spotifySearch route:", error);
         res.status(500).json({
             status: 500,
             dev: "@mysu_019",
