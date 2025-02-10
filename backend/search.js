@@ -1,6 +1,6 @@
 const yts = require("yt-search");
 
-async function youtube(query) {
+async function ytsearch(query) {
     try {
         const res = await yts.search(query);
         if (!res.videos.length) {
