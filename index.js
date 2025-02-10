@@ -42,7 +42,7 @@ app.get("/api/ytsearch", async (req, res) => {
         });
     }
     try {
-        const result = await youtube(url);
+        const result = await youtube(query);
         res.json(result);
     } catch (error) {
         res.status(500).json({ 
