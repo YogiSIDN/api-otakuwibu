@@ -1,4 +1,5 @@
 const express = require("express")
+const axios = require("axios")
 const path = require("path")
 const app = express()
 app.use(express.json())
@@ -9,19 +10,19 @@ const { tinyUrl } = require("./backend/shortURL")
 const { yts } = require("./backend/search")
 app.set("json spaces", 4)
 
-app.get("/api/tinyUrl", async (req, res) => {
-    const { url } = req.query
-    if (!url) {
-        return res.status(400).json({ 
-            status: 400, 
-            message: "Terjadi kesalahan." 
-        })
-    }
+app.get("/api/sfw/waifu", async (req, res) => {
     try {
-        const result = await tinyUrl(url)
-        res.json(result)
+        const response = await axios.get("https://api.waifu.pics/sfw/waifu", {
+            responseType: "arrayBuffer"
+        })
+        res.setHeader("Content-Type", "image/png")
+        res.send(response.data.url)
     } catch (error) {
-        res.status(500).json(error)
+        res.status(500).json({
+            status: 500,
+            dev: "@mysu_019",
+            message: "Terjadi kesalahan."
+        })
     }
 })
 
@@ -46,7 +47,23 @@ app.get("/api/yts", async (req, res) => {
                error: error.message
            });
        }
-   });
+})
+   
+app.get("/api/tinyUrl", async (req, res) => {
+    const { url } = req.query
+    if (!url) {
+        return res.status(400).json({ 
+            status: 400, 
+            message: "Terjadi kesalahan." 
+        })
+    }
+    try {
+        const result = await tinyUrl(url)
+        res.json(result)
+    } catch (error) {
+        res.status(500).json(error)
+    }
+})
 
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
