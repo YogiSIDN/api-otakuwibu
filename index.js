@@ -13,7 +13,7 @@ app.set("json spaces", 4)
 
 app.get("/api/sfw/loli", async (req, res) => {
     try {
-        const pilihan = ["loli", "goth-loli", "lolita", "lolita_fashion", "sweet_loli", "lolicon"];
+        const pilihan = ["loli", "goth-loli", "lolita_fashion"];
         const hasilAcak = pilihan[Math.floor(Math.random() * pilihan.length)];
         const jsonResponse = await booru.search('konan', [hasilAcak], { limit: 1, random: true });
         if (!jsonResponse.posts || jsonResponse.posts.length === 0) {
