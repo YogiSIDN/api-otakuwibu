@@ -1,12 +1,17 @@
 const express = require("express");
+const path = require("path");
 const app = express();
 app.use(express.json());
+
+// Menyajikan file statis dari folder public
+app.use(express.static(path.join(__dirname, "public")));
 
 // Backend
 const { tinyUrl } = require("./backend/shortURL");
 
 app.set("json spaces", 4);
 
+// Endpoint API
 app.get("/api/tinyUrl", async (req, res) => {
     const { url } = req.query;
 
@@ -18,7 +23,7 @@ app.get("/api/tinyUrl", async (req, res) => {
     }
     try {
         const result = await tinyUrl(url);
-        res.json({result});
+        res.json({ result });
     } catch (error) {
         res.status(500).json({ 
             status: 500, 
@@ -28,9 +33,8 @@ app.get("/api/tinyUrl", async (req, res) => {
     }
 });
 
+// Jalankan server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Running in port: ${PORT}`);
 });
-
-module.exports = app;
