@@ -9,6 +9,7 @@
   "author": "iG @mysu_019",
   "license": "ISC",
   "dependencies": {
+    "booru": "^2.6.6",
     "express": "^4.18.2",
     "node-fetch": "^2.6.1",
     "youtube-search-api": "^1.2.2"
