@@ -9,7 +9,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // Backend
 const { tinyUrl, akariUrl } = require("./backend/shortURL");
 
-app.set("json spaces", 4);
+//app.set("json spaces", 4);
 
 // Endpoint API
 app.get("/api/tinyUrl", async (req, res) => {
