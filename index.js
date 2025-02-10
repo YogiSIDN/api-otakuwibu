@@ -24,11 +24,7 @@ app.get("/api/tinyUrl", async (req, res) => {
         const result = await tinyUrl(url);
         res.json(result);
     } catch (error) {
-        res.status(500).json({ 
-            status: 500, 
-            success: false, 
-            message: "Terjadi kesalahan saat memproses URL"
-        });
+        res.status(500).json(error);
     }
 });
 
@@ -41,15 +37,17 @@ app.get("/api/ytsearch", async (req, res) => {
             message: "Berikan saya JUDUL!" 
         });
     }
+
     try {
         const result = await youtube(query);
+
+        if (result.status === 404) {
+            return res.status(404).json(result);
+        }
+
         res.json(result);
     } catch (error) {
-        res.status(500).json({ 
-            status: 500, 
-            success: false, 
-            message: "Terjadi kesalahan."
-        });
+        res.status(500).json(error);
     }
 });
 
