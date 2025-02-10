@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Otaku Wibu Nusantara API</title>
+    <meta name="author" content="@mysu_019">
+    <meta name="title" content="Otaku Wibu Nusantara API | Restful API">
+    <meta name="description" content="Otaku Wibu Nusantara API adalah platform REST API yang sangat handal dan mudah digunakan. Dengan antarmuka yang intuitif, pengguna dapat dengan mudah mengakses dan mengintegrasikan berbagai sumber daya data.">
+    <meta name="keywords" content="Otaku API, Wibu API, Nusantara, Otaku Wibu Nusantara API, web">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://otakuwibunusantara-api.vercel.app">
+    <meta property="og:title" content="Otaku Wibu Nusantara API | Restful API">
+    <meta property="og:description" content="Otaku Wibu Nusantara API adalah platform REST API yang sangat handal dan mudah digunakan. Dengan antarmuka yang intuitif, pengguna dapat dengan mudah mengakses dan mengintegrasikan berbagai sumber daya data.">
+    <meta property="og:site_name" content="Otaku Wibu Nusantara API, Web Restful API">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:700|Roboto" rel="stylesheet" type="text/css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+        .description {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+        }
+        .clock {
+            font-size: 1.2rem;
+            margin: 20px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #2b2b2b;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-right: 1px solid #333333;
+        }
+        th {
+            background-color: #333333;
+            font-weight: bold;
+        }
+        th:last-child, td:last-child {
+            border-right: none;
+        }
+        tr:nth-child(even) {
+            background-color: #242424;
+        }
+        tr:hover {
+            background-color: #333333;
+        }
+        a {
+            color: #1e90ff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        a:hover {
+            color: #63a4ff;
+        }
+        footer {
+            margin-top: 20px;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #bbbbbb;
+        }
+        @media (max-width: 900px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            .description {
+                font-size: 1rem;
+            }
+            th, td {
+                padding: 10px;
+            }
+        }
+        @media (max-width: 400px) {
+            h1 {
+                font-size: 2rem;
+            }
+            .description {
+                font-size: 0.9rem;
+            }
+            th, td {
+                padding: 8px;
+            }
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #2b2b2b;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            border-radius: 10px;
+            overflow: hidden;
+            top: 100%; 
+            left: 0;
+            opacity: 0; 
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease; 
+        }
+
+        .dropdown-content a {
+            color: #ffffff;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #3e3e3e;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+            opacity: 1; 
+            transform: translateY(0);
+        }
+        .instagram-button {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.instagram-button button {
+    background-color: #FF3465; 
+    color: #ffffff;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.instagram-button button:hover {
+    background-color: #FD4932;
+    transform: scale(1.05);
+}
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Otaku Wibu Nusantara API's</h1>
+        <div class="description">
+            Rest API dibuat untuk kebutuhan bot
+            <div id="MyClockDisplay" class="clock"></div>
+            <div class="instagram-button">
+    <a href="https://www.instagram.com/mysu_019?igsh=MTgxd2c0eWp4OWs5Yg==" target="_blank">
+        <button>Ikuti Saya</button>
+    </a>
+</div>
+            <h3>Url Shortener</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Name</th>
+                        <th>Method</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Tiny</td>
+                        <td>GET</td>
+                        <td><a href="/api/tinyUrl?url=https://example.com">[ ➠ ]</a></td>
+                    </tr>
+                    </tbody>
+                    </table>
+        </div>
+        <footer>
+            <p>&#169; 2025 Otaku Wibu Nusantara. All rights reserved.</p>
+        </footer>
+    </div>
+    <script>
+        function showTime() {
+            const date = new Date();
+            let h = date.getHours();
+            let m = date.getMinutes();
+            let s = date.getSeconds();
+            h = h < 10 ? "0" + h : h;
+            m = m < 10 ? "0" + m : m;
+            s = s < 10 ? "0" + s : s;
+            const time = h + ":" + m + ":" + s;
+            document.getElementById("MyClockDisplay").innerText = time;
+            setTimeout(showTime, 1000);
+        }
+
+        showTime();
+    </script>
+</body>
+</html>
