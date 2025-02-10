@@ -6,9 +6,9 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Backend
 const { tinyUrl } = require("./backend/shortURL");
-const { youtube } = require("./backend/search");
+const { ytsearch } = require("./backend/search");
 
-app.set("json spaces", 2);
+app.set("json spaces", 4);
 
 // Endpoint API
 app.get("/api/tinyUrl", async (req, res) => {
@@ -22,9 +22,13 @@ app.get("/api/tinyUrl", async (req, res) => {
     }
     try {
         const result = await tinyUrl(url);
-        res.json(result);
+        res.json({
+            result
+        });
     } catch (error) {
-        res.status(500).json(error);
+        res.status(500).json({
+            error
+        });
     }
 });
 
@@ -39,15 +43,21 @@ app.get("/api/ytsearch", async (req, res) => {
     }
 
     try {
-        const result = await youtube(query);
+        const result = await ytsearch(query);
 
         if (result.status === 404) {
-            return res.status(404).json(result);
+            return res.status(404).json({
+                result
+            });
         }
 
-        res.json(result);
+        res.json({
+            result
+        });
     } catch (error) {
-        res.status(500).json(error);
+        res.status(500).json({
+            error
+        });
     }
 });
 
