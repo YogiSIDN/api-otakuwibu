@@ -44,49 +44,53 @@ async function getAccessToken() {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
         });
-        const data = response.data;
-        return data.access_token;
+        return response.data.access_token;
     } catch (error) {
-        console.error('Error getting Spotify access token:', error);
-        throw 'An error occurred while obtaining Spotify access token.';
+        console.error('Error getting Spotify access token:', error.response?.data || error.message);
+        throw new Error('An error occurred while obtaining Spotify access token.');
     }
 }
 
 async function sps(query) {
     try {
         const SPOTIFY_ACCESS_TOKEN = await getAccessToken();
-        const response = await axios.get(`https://api.spotify.com/v1/search?q=${query}&type=track&limit=10`, {
+        const response = await axios.get(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=10`, {
             headers: {
                 Authorization: `Bearer ${SPOTIFY_ACCESS_TOKEN}`,
             },
         });
-        if (!res.response.data.items || response.data.items.length === 0) {
-               return {
-                   status: 404,
-                   dev: "@mysu_019",
-                   message: "Tidak ada hasil yang ditemukan."
-               };
-           }
-        const tracks = data.tracks.items.map(item => ({
+
+        // Validasi respons dari Spotify
+        if (!response.data.tracks || !response.data.tracks.items || response.data.tracks.items.length === 0) {
+            return {
+                status: 404,
+                dev: "@mysu_019",
+                message: "Tidak ada hasil yang ditemukan."
+            };
+        }
+
+        // Mapping hasil pencarian
+        const tracks = response.data.tracks.items.map(item => ({
             name: item.name,
             artists: item.artists.map(artist => artist.name).join(', '),
             popularity: item.popularity,
             link: item.external_urls.spotify,
-            image: item.album.images[0].url,
+            image: item.album.images.length > 0 ? item.album.images[0].url : null, // Cegah error jika tidak ada gambar
             duration_ms: item.duration_ms,
         }));
+
         return {
-               status: 200,
-               dev: "@mysu_019",
-               data: tracks
-           };
+            status: 200,
+            dev: "@mysu_019",
+            data: tracks
+        };
     } catch (error) {
+        console.error("Error in sps function:", error.response?.data || error.message);
         return {
-               status: 500,
-               dev: "@mysu_019",
-               message: "Terjadi kesalahan."
-           };
+            status: 500,
+            dev: "@mysu_019",
+            message: "Terjadi kesalahan saat mencari lagu di Spotify."
+        };
     }
-}
 
 module.exports = { sps, yts }
