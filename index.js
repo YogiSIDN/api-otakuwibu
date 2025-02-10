@@ -26,20 +26,27 @@ app.get("/api/tinyUrl", async (req, res) => {
 })
 
 app.get("/api/yts", async (req, res) => {
-    const { q } = req.query
-    if (!q) {
-        return res.status(400).json({ 
-            status: 400, 
-            message: "Terjadi kesalahan." 
-        })
-    }
-    try {
-        const result = await yts(q)
-        res.json(result)
-    } catch (error) {
-        res.status(500).json(error)
-    }
-})
+       const { q } = req.query;
+       if (!q) {
+           return res.status(400).json({ 
+               status: 400, 
+               message: "Terjadi kesalahan." 
+           });
+       }
+       try {
+           const result = await yts(q);
+           if (result.status !== 200) {
+               return res.status(result.status).json(result);
+           }
+           res.json(result);
+       } catch (error) {
+           res.status(500).json({
+               status: 500,
+               message: "Terjadi kesalahan.",
+               error: error.message
+           });
+       }
+   });
 
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
