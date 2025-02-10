@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 // Backend
-const { tinyUrl } = require("./backend/shortURL");
+const { tinyUrl, akariUrl } = require("./backend/shortURL");
 
 app.set("json spaces", 4);
 
@@ -23,7 +23,28 @@ app.get("/api/tinyUrl", async (req, res) => {
     }
     try {
         const result = await tinyUrl(url);
-        res.json({ result });
+        res.json(result);
+    } catch (error) {
+        res.status(500).json({ 
+            status: 500, 
+            success: false, 
+            message: "Terjadi kesalahan saat memproses URL"
+        });
+    }
+});
+
+app.get("/api/akariUrl", async (req, res) => {
+    const { url } = req.query;
+
+    if (!url) {
+        return res.status(400).json({ 
+            status: 400, 
+            message: "Berikan saya URL!" 
+        });
+    }
+    try {
+        const result = await akariUrl(url)
+        res.json(result);
     } catch (error) {
         res.status(500).json({ 
             status: 500, 
