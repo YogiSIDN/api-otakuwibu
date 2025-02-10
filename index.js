@@ -1,4 +1,5 @@
 const express = require("express")
+const booru = require("booru")
 const axios = require("axios")
 const path = require("path")
 const app = express()
@@ -9,6 +10,42 @@ app.use(express.static(path.join(__dirname, "public")))
 const { tinyUrl } = require("./backend/shortURL")
 const { yts } = require("./backend/search")
 app.set("json spaces", 4)
+
+app.get("/api/sfw/loli", async (req, res) => {
+    try {
+        const pilihan = ["loli", "goth-loli", "lolita", "lolita_fashion", "sweet_loli", "lolicon"];
+        const hasilAcak = pilihan[Math.floor(Math.random() * pilihan.length)];
+        const jsonResponse = await booru.search('konan', [`${hasilAcak}`], { limit: 1, random: true })
+        const imageUrl = jsonResponse.posts[0].fileUrl
+        const imageResponse = await axios.get(imageUrl, { responseType: "arraybuffer" });
+
+        res.setHeader("Content-Type", "image/jpeg");
+        res.send(imageResponse.data);
+    } catch (error) {
+        res.status(500).json({
+            status: 500,
+            dev: "@mysu_019",
+            message: "Terjadi kesalahan."
+        });
+    }
+});
+
+app.get("/api/sfw/neko", async (req, res) => {
+    try {
+        const jsonResponse = await axios.get("https://api.waifu.pics/sfw/neko");
+        const imageUrl = jsonResponse.data.url;
+        const imageResponse = await axios.get(imageUrl, { responseType: "arraybuffer" });
+
+        res.setHeader("Content-Type", "image/jpeg");
+        res.send(imageResponse.data);
+    } catch (error) {
+        res.status(500).json({
+            status: 500,
+            dev: "@mysu_019",
+            message: "Terjadi kesalahan."
+        });
+    }
+});
 
 app.get("/api/sfw/waifu", async (req, res) => {
     try {
@@ -31,7 +68,8 @@ app.get("/api/yts", async (req, res) => {
        const { q } = req.query;
        if (!q) {
            return res.status(400).json({ 
-               status: 400, 
+               status: 400,
+               dev: "@mysu_019",
                message: "Terjadi kesalahan." 
            });
        }
@@ -44,8 +82,8 @@ app.get("/api/yts", async (req, res) => {
        } catch (error) {
            res.status(500).json({
                status: 500,
-               message: "Terjadi kesalahan.",
-               error: error.message
+               dev: "@mysu_019",
+               message: "Terjadi kesalahan."
            });
        }
 })
@@ -54,7 +92,8 @@ app.get("/api/tinyUrl", async (req, res) => {
     const { url } = req.query
     if (!url) {
         return res.status(400).json({ 
-            status: 400, 
+            status: 400,
+            dev: "@mysu_019",
             message: "Terjadi kesalahan." 
         })
     }
@@ -62,7 +101,11 @@ app.get("/api/tinyUrl", async (req, res) => {
         const result = await tinyUrl(url)
         res.json(result)
     } catch (error) {
-        res.status(500).json(error)
+        .status(500).json({
+               status: 500,
+               dev: "@mysu_019",
+               message: "Terjadi kesalahan."
+           });
     }
 })
 
