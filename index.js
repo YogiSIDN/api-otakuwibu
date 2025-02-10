@@ -15,17 +15,24 @@ app.get("/api/sfw/loli", async (req, res) => {
     try {
         const pilihan = ["loli", "goth-loli", "lolita", "lolita_fashion", "sweet_loli", "lolicon"];
         const hasilAcak = pilihan[Math.floor(Math.random() * pilihan.length)];
-        const jsonResponse = await booru.search('konan', [`${hasilAcak}`], { limit: 1, random: true })
-        const imageUrl = jsonResponse.posts[0].fileUrl
+        const jsonResponse = await booru.search('konan', [hasilAcak], { limit: 1, random: true });
+        if (!jsonResponse.posts || jsonResponse.posts.length === 0) {
+            return res.status(404).json({
+                status: 404,
+                message: "Gambar tidak ditemukan."
+            });
+        }
+        const imageUrl = jsonResponse.posts[0].fileUrl;
         const imageResponse = await axios.get(imageUrl, { responseType: "arraybuffer" });
+        const contentType = imageUrl.endsWith('.png') ? 'image/png' : imageUrl.endsWith('.gif') ? 'image/gif' : 'image/jpeg';
 
-        res.setHeader("Content-Type", "image/jpeg");
+        res.setHeader("Content-Type", contentType);
         res.send(imageResponse.data);
     } catch (error) {
         res.status(500).json({
             status: 500,
             dev: "@mysu_019",
-            message: "Terjadi kesalahan."
+            message: "Terjadi kesalahan pada.",
         });
     }
 });
