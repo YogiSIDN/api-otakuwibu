@@ -73,28 +73,28 @@ app.get("/api/sfw/waifu", async (req, res) => {
 });
 
 app.get("/api/spotifySearch", async (req, res) => {
-       const { q } = req.query;
-       if (!q) {
-           return res.status(400).json({ 
-               status: 400,
-               dev: "@mysu_019",
-               message: "Terjadi kesalahan." 
-           });
-       }
-       try {
-           const result = await sps(q);
-           if (result.status !== 200) {
-               return res.status(result.status).json(result);
-           }
-           res.json(result);
-       } catch (error) {
-           res.status(500).json({
-               status: 500,
-               dev: "@mysu_019",
-               message: "Terjadi kesalahan."
-           });
-       }
-})
+    const { q } = req.query;
+
+    if (!q) {
+        return res.status(400).json({ 
+            status: 400,
+            dev: "@mysu_019",
+            message: "Query tidak boleh kosong." 
+        });
+    }
+
+    try {
+        const result = await sps(q);
+        res.status(result.status).json(result);
+    } catch (error) {
+        console.error("Error in /api/spotifySearch route:", error);
+        res.status(500).json({
+            status: 500,
+            dev: "@mysu_019",
+            message: "Terjadi kesalahan."
+        });
+    }
+});
 
 app.get("/api/yts", async (req, res) => {
        const { q } = req.query;
@@ -102,7 +102,7 @@ app.get("/api/yts", async (req, res) => {
            return res.status(400).json({ 
                status: 400,
                dev: "@mysu_019",
-               message: "Terjadi kesalahan." 
+               message: "Query tidak boleh kosong." 
            });
        }
        try {
@@ -126,7 +126,7 @@ app.get("/api/tinyUrl", async (req, res) => {
         return res.status(400).json({ 
             status: 400,
             dev: "@mysu_019",
-            message: "Terjadi kesalahan." 
+            message: "Url tidak boleh kosong." 
         })
     }
     try {
