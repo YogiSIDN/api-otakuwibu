@@ -2,14 +2,13 @@ const express = require("express");
 const path = require("path");
 const app = express();
 app.use(express.json());
-
-// Menyajikan file statis dari folder public
 app.use(express.static(path.join(__dirname, "public")));
 
 // Backend
 const { tinyUrl } = require("./backend/shortURL");
+const { youtube } = require("./backend/search");
 
-//app.set("json spaces", 4);
+app.set("json spaces", 2);
 
 // Endpoint API
 app.get("/api/tinyUrl", async (req, res) => {
@@ -29,6 +28,27 @@ app.get("/api/tinyUrl", async (req, res) => {
             status: 500, 
             success: false, 
             message: "Terjadi kesalahan saat memproses URL"
+        });
+    }
+});
+
+app.get("/api/ytsearch", async (req, res) => {
+    const { query } = req.query;
+
+    if (!query) {
+        return res.status(400).json({ 
+            status: 400, 
+            message: "Berikan saya JUDUL!" 
+        });
+    }
+    try {
+        const result = await youtube(url);
+        res.json(result);
+    } catch (error) {
+        res.status(500).json({ 
+            status: 500, 
+            success: false, 
+            message: "Terjadi kesalahan."
         });
     }
 });
