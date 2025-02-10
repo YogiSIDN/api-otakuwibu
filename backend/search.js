@@ -92,5 +92,6 @@ async function sps(query) {
             message: "Terjadi kesalahan saat mencari lagu di Spotify."
         };
     }
+}
 
 module.exports = { sps, yts }
