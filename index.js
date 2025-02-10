@@ -19,6 +19,7 @@ app.get("/api/sfw/loli", async (req, res) => {
         if (!jsonResponse.posts || jsonResponse.posts.length === 0) {
             return res.status(404).json({
                 status: 404,
+                dev: "@mysu_019",
                 message: "Gambar tidak ditemukan."
             });
         }
@@ -108,7 +109,7 @@ app.get("/api/tinyUrl", async (req, res) => {
         const result = await tinyUrl(url)
         res.json(result)
     } catch (error) {
-        .status(500).json({
+        res.status(500).json({
                status: 500,
                dev: "@mysu_019",
                message: "Terjadi kesalahan."
