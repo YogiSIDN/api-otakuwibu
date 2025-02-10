@@ -12,19 +12,20 @@ app.set("json spaces", 4)
 
 app.get("/api/sfw/waifu", async (req, res) => {
     try {
-        const response = await axios.get("https://api.waifu.pics/sfw/waifu", {
-            responseType: "arrayBuffer"
-        })
-        res.setHeader("Content-Type", "image/png")
-        res.send(response.data.url)
+        const jsonResponse = await axios.get("https://api.waifu.pics/sfw/waifu");
+        const imageUrl = jsonResponse.data.url;
+        const imageResponse = await axios.get(imageUrl, { responseType: "arraybuffer" });
+
+        res.setHeader("Content-Type", "image/jpeg");
+        res.send(imageResponse.data);
     } catch (error) {
         res.status(500).json({
             status: 500,
             dev: "@mysu_019",
             message: "Terjadi kesalahan."
-        })
+        });
     }
-})
+});
 
 app.get("/api/yts", async (req, res) => {
        const { q } = req.query;
