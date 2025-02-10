@@ -1,32 +1,47 @@
-const express = require("express");
-const path = require("path");
-const app = express();
-app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
+const express = require("express")
+const path = require("path")
+const app = express()
+app.use(express.json())
+app.use(express.static(path.join(__dirname, "public")))
 
 // Backend
-const { tinyUrl } = require("./backend/shortURL");
-app.set("json spaces", 4);
+const { tinyUrl } = require("./backend/shortURL")
+const { yts } = require("./backend/search")
+app.set("json spaces", 4)
 
-// Endpoint API
 app.get("/api/tinyUrl", async (req, res) => {
-    const { url } = req.query;
-
+    const { url } = req.query
     if (!url) {
         return res.status(400).json({ 
             status: 400, 
-            message: "Berikan saya URL!" 
-        });
+            message: "Terjadi kesalahan." 
+        })
     }
     try {
-        const result = await tinyUrl(url);
-        res.json(result);
+        const result = await tinyUrl(url)
+        res.json(result)
     } catch (error) {
-        res.status(500).json(error);
+        res.status(500).json(error)
     }
-});
+})
 
-const PORT = process.env.PORT || 3000;
+app.get("/api/yts", async (req, res) => {
+    const { q } = req.query
+    if (!q) {
+        return res.status(400).json({ 
+            status: 400, 
+            message: "Terjadi kesalahan." 
+        })
+    }
+    try {
+        const result = await yts(q)
+        res.json(result)
+    } catch (error) {
+        res.status(500).json(error)
+    }
+})
+
+const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
-    console.log(`Running in port: ${PORT}`);
-});
+    console.log(`Running in port: ${PORT}`)
+})
