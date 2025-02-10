@@ -1,33 +1,38 @@
-const Scraper = require('@yimura/scraper').default;
-const yts = new Scraper();
+const yts = require("yt-search");
 
 async function youtube(query) {
-    return new Promise((resolve, reject) => {
-        yts.search(query)
-            .then(res => {
-                const videos = res.videos.map(video => ({
-                    id: video.id,
-                    title: video.title,
-                    duration: video.duration_raw,
-                    channel: video.channel.name,
-                    thumbnail: video.thumbnail,
-                    link: video.shareLink
-                }));
-                resolve({
-                    status: 200,
-                    dev: "@mysu_019",
-                    data: videos
-                });
-            })
-            .catch(error => reject({
-                status: 500,
+    try {
+        const res = await yts.search(query);
+        if (!res.videos.length) {
+            return {
+                status: 404,
                 dev: "@mysu_019",
-                message: "Terjadi kesalahan."
-            }
-            }));
-    });
+                message: "Tidak ditemukan hasil untuk pencarian tersebut."
+            };
+        }
+
+        const videos = res.videos.slice(0, 10).map(video => ({
+            id: video.videoId,
+            title: video.title,
+            duration: video.timestamp,
+            channel: video.author.name,
+            thumbnail: video.thumbnail,
+            link: video.url
+        }));
+
+        return {
+            status: 200,
+            dev: "@mysu_019",
+            data: videos
+        };
+    } catch (error) {
+        return {
+            status: 500,
+            dev: "@mysu_019",
+            message: "Terjadi kesalahan.",
+            error: error.message
+        };
+    }
 }
 
-module.exports = {
-    youtube
-}
+module.exports = { youtube };
