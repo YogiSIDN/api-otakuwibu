@@ -87,7 +87,7 @@ app.get("/api/nsfw/nhpdf", async (req, res) => {
         }
 
         const doc = new PDFDocument({ autoFirstPage: false });
-        const pdfPath = `./${data.title}.pdf`;
+        const pdfPath = `./temp/${data.title}.pdf`;
         const writeStream = fs.createWriteStream(pdfPath);
         doc.pipe(writeStream);
 
