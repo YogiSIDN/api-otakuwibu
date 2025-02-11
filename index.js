@@ -38,6 +38,29 @@ app.get("/api/ytmp3", async (req, res) => {
   }
 });
 
+app.get("/api/ytmp4", async (req, res) => {
+  const { url } = req.query;
+
+  if (!url) {
+    return res.status(400).json({
+      status: 400,
+      dev: "@mysu_019",
+      message: "Parameter 'url' tidak boleh kosong."
+    });
+  }
+
+  try {
+    const result = await ytdl(url, "mp3");
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({
+      status: 500,
+      dev: "@mysu_019",
+      message: "Terjadi kesalahan saat memproses permintaan."
+    });
+  }
+});
+
 app.get("/api/nsfw/nhsearch", async (req, res) => {
     const { q } = req.query;
        if (!q) {
