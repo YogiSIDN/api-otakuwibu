@@ -12,7 +12,7 @@ const { tinyUrl } = require("./backend/shortURL")
 const { sps, yts } = require("./backend/search")
 app.set("json spaces", 4)
 
-app.get("/api/nsfw/nhentai", async (req, res) => {
+app.get("/api/nsfw/nhsearch", async (req, res) => {
     const { q } = req.query;
        if (!q) {
            return res.status(400).json({ 
@@ -37,6 +37,27 @@ app.get("/api/nsfw/nhentai", async (req, res) => {
                dev: "@mysu_019",
                message: "Terjadi kesalahan."
            });
+    }
+})
+
+app.get("/api/nsfw/nhdetail", async (req, res) => {
+    const { id } = req.query;
+       if (!id) {
+           return res.status(400).json({ 
+               status: 400,
+               dev: "@mysu_019",
+               message: "ID tidak boleh kosong." 
+           });
+       }
+    try {
+       const response = await nhDetail(id)
+       res.json(response)
+    } catch (error) {
+        res.status(500).json({
+            status: 500,
+            dev: "@mysu_019",
+            message: "Terjadi kesalahan.",
+        });
     }
 })
 
