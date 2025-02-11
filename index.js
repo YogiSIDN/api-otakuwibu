@@ -50,7 +50,7 @@ app.get("/api/ytmp4", async (req, res) => {
   }
 
   try {
-    const result = await ytdl(url, "mp3");
+    const result = await ytdl(url, "360");
     res.json(result);
   } catch (error) {
     res.status(500).json({
