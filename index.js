@@ -12,7 +12,31 @@ app.use(express.static(path.join(__dirname, "public")))
 const { nhSearch, nhDetail } = require("./backend/nhentai")
 const { tinyUrl } = require("./backend/shortURL")
 const { sps, yts } = require("./backend/search")
+const { ytdl } = require("./backend/ytdl-core")
 app.set("json spaces", 4)
+
+app.get("/api/ytmp3", async (req, res) => {
+  const { url } = req.query;
+
+  if (!url) {
+    return res.status(400).json({
+      status: 400,
+      dev: "@mysu_019",
+      message: "Parameter 'url' tidak boleh kosong."
+    });
+  }
+
+  try {
+    const result = await ytdl(url, "mp3");
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({
+      status: 500,
+      dev: "@mysu_019",
+      message: "Terjadi kesalahan saat memproses permintaan."
+    });
+  }
+});
 
 app.get("/api/nsfw/nhsearch", async (req, res) => {
     const { q } = req.query;
@@ -20,7 +44,7 @@ app.get("/api/nsfw/nhsearch", async (req, res) => {
            return res.status(400).json({ 
                status: 400,
                dev: "@mysu_019",
-               message: "Query tidak boleh kosong." 
+               message: "Parameter 'q' tidak boleh kosong." 
            });
        }
     try {
@@ -48,7 +72,7 @@ app.get("/api/nsfw/nhdetail", async (req, res) => {
            return res.status(400).json({ 
                status: 400,
                dev: "@mysu_019",
-               message: "ID tidak boleh kosong." 
+               message: "Parameter 'id' tidak boleh kosong." 
            });
        }
     try {
@@ -62,58 +86,6 @@ app.get("/api/nsfw/nhdetail", async (req, res) => {
         });
     }
 })
-
-app.get("/api/nsfw/nhpdf", async (req, res) => {
-    const { id } = req.query;
-    if (!id) {
-        return res.status(400).json({ 
-            status: 400,
-            dev: "@mysu_019",
-            message: "ID tidak boleh kosong." 
-        });
-    }
-
-    try {
-        const response = await nhDetail(id);
-        const data = response.data;
-        const images = data.media; // Ambil daftar URL gambar
-
-        if (!images || images.length === 0) {
-            return res.status(404).json({
-                status: 404,
-                dev: "@mysu_019",
-                message: "Gagal memuat PDF. Tidak ada gambar ditemukan."
-            });
-        }
-
-        const doc = new PDFDocument({ autoFirstPage: false });
-        const pdfPath = `./temp/${data.title}.pdf`;
-        const writeStream = fs.createWriteStream(pdfPath);
-        doc.pipe(writeStream);
-
-        for (const imageUrl of images) {
-            const imgResponse = await axios.get(imageUrl, { responseType: "arraybuffer" });
-            doc.addPage({ size: [600, 800] }).image(imgResponse.data, 0, 0, { fit: [600, 800] });
-        }
-
-        doc.end();
-
-        writeStream.on("finish", () => {
-            res.download(pdfPath, `${data.title}.pdf`, (err) => {
-                if (err) console.error("Download error:", err);
-                fs.unlinkSync(pdfPath); // Hapus file setelah diunduh
-            });
-        });
-
-    } catch (error) {
-        console.error("Error:", error);
-        res.status(500).json({
-            status: 500,
-            dev: "@mysu_019",
-            message: "Terjadi kesalahan saat membuat PDF."
-        });
-    }
-});
 
 app.get("/api/sfw/loli", async (req, res) => {
     try {
@@ -183,7 +155,7 @@ app.get("/api/spotifySearch", async (req, res) => {
         return res.status(400).json({ 
             status: 400,
             dev: "@mysu_019",
-            message: "Query tidak boleh kosong." 
+            message: "Parameter 'q' tidak boleh kosong." 
         });
     }
 
@@ -205,7 +177,7 @@ app.get("/api/yts", async (req, res) => {
            return res.status(400).json({ 
                status: 400,
                dev: "@mysu_019",
-               message: "Query tidak boleh kosong." 
+               message: "Parameter 'q' tidak boleh kosong." 
            });
        }
        try {
@@ -229,7 +201,7 @@ app.get("/api/tinyUrl", async (req, res) => {
         return res.status(400).json({ 
             status: 400,
             dev: "@mysu_019",
-            message: "Url tidak boleh kosong." 
+            message: "Parameter 'url' tidak boleh kosong." 
         })
     }
     try {
