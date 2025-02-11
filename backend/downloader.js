@@ -1,6 +1,6 @@
 const ytdl = require("@distube/ytdl-core")
 
-async function ytdl(url) {
+async function ytdown(url) {
     try {
         const getInfo = await ytdl.getInfo(url)
         return {
@@ -17,4 +17,4 @@ async function ytdl(url) {
     }
 }
 
-module.exports = { ytdl }
+module.exports = { ytdown }
