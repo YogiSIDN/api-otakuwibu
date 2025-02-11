@@ -7,12 +7,12 @@ async function ytdown(url) {
             status: 200,
             dev: "@mysu_019",
             data: getInfo
+        }
         } catch (error) {
-            return {
-               status: 500,
-               dev: "@mysu_019",
-               message: "Terjadi kesalahan.",
-            }
+        return {
+            status: 500,
+            dev: "@mysu_019",
+            message: "Terjadi kesalahan.",
         }
     }
 }
