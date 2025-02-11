@@ -1,6 +1,8 @@
 const express = require("express")
 const booru = require("booru")
 const axios = require("axios")
+const fs = require("fs")
+const PDFDocument = require("pdfkit")
 const path = require("path")
 const app = express()
 app.use(express.json())
@@ -52,6 +54,52 @@ app.get("/api/nsfw/nhdetail", async (req, res) => {
     try {
        const response = await nhDetail(id)
        res.json(response)
+    } catch (error) {
+        res.status(500).json({
+            status: 500,
+            dev: "@mysu_019",
+            message: "Terjadi kesalahan.",
+        });
+    }
+})
+
+app.get("/api/nsfw/nhpdf", async (req, res) => {
+    const { id } = req.query;
+       if (!id) {
+           return res.status(400).json({ 
+               status: 400,
+               dev: "@mysu_019",
+               message: "ID tidak boleh kosong." 
+           });
+       }
+    try {
+       const response = await nhDetail(id)
+       const bufArray = response.data
+       if (!bufArray.media || bufArray.media.length === 0) {
+           return res.status(404).json({
+                status: 404,
+                dev: "@mysu_019",
+                message: "Gagal memuat pdf."
+            });
+       }
+       const doc = new PDFDocument();
+       const pdfPath = `./${bufArray.title}.pdf`;
+       const writeStream = fs.createWriteStream(pdfPath);
+       doc.pipe(writeStream);
+
+        for (const imageUrl of bufArray) {
+            const responses = await axios.get(imageUrl, { responseType: "arraybuffer" });
+            doc.addPage().image(responses.data, 0, 0, { fit: [600, 800] });
+        }
+
+        doc.end();
+
+        writeStream.on("finish", () => {
+            res.download(pdfPath, `${title}.pdf`, (err) => {
+                if (err) console.error("Download error:", err);
+                fs.unlinkSync(pdfPath); // Hapus file setelah diunduh
+            });
+        });
     } catch (error) {
         res.status(500).json({
             status: 500,
