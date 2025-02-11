@@ -9,10 +9,11 @@
   "author": "iG @mysu_019",
   "license": "ISC",
   "dependencies": {
-    "@distube/ytdl-core": "^4.16.3",
     "booru": "^2.6.6",
+    "cheerio": "^1.0.0",
     "express": "^4.18.2",
     "node-fetch": "^2.6.1",
+    "undici": "^7.3.0",
     "youtube-search-api": "^1.2.2"
   }
 }
