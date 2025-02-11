@@ -65,49 +65,55 @@ app.get("/api/nsfw/nhdetail", async (req, res) => {
 
 app.get("/api/nsfw/nhpdf", async (req, res) => {
     const { id } = req.query;
-       if (!id) {
-           return res.status(400).json({ 
-               status: 400,
-               dev: "@mysu_019",
-               message: "ID tidak boleh kosong." 
-           });
-       }
+    if (!id) {
+        return res.status(400).json({ 
+            status: 400,
+            dev: "@mysu_019",
+            message: "ID tidak boleh kosong." 
+        });
+    }
+
     try {
-       const response = await nhDetail(id)
-       const bufArray = response.data
-       if (!bufArray.media || bufArray.media.length === 0) {
-           return res.status(404).json({
+        const response = await nhDetail(id);
+        const data = response.data;
+        const images = data.media; // Ambil daftar URL gambar
+
+        if (!images || images.length === 0) {
+            return res.status(404).json({
                 status: 404,
                 dev: "@mysu_019",
-                message: "Gagal memuat pdf."
+                message: "Gagal memuat PDF. Tidak ada gambar ditemukan."
             });
-       }
-       const doc = new PDFDocument();
-       const pdfPath = `./${bufArray.title}.pdf`;
-       const writeStream = fs.createWriteStream(pdfPath);
-       doc.pipe(writeStream);
+        }
 
-        for (const imageUrl of bufArray) {
-            const responses = await axios.get(imageUrl, { responseType: "arraybuffer" });
-            doc.addPage().image(responses.data, 0, 0, { fit: [600, 800] });
+        const doc = new PDFDocument({ autoFirstPage: false });
+        const pdfPath = `./${data.title}.pdf`;
+        const writeStream = fs.createWriteStream(pdfPath);
+        doc.pipe(writeStream);
+
+        for (const imageUrl of images) {
+            const imgResponse = await axios.get(imageUrl, { responseType: "arraybuffer" });
+            doc.addPage({ size: [600, 800] }).image(imgResponse.data, 0, 0, { fit: [600, 800] });
         }
 
         doc.end();
 
         writeStream.on("finish", () => {
-            res.download(pdfPath, `${title}.pdf`, (err) => {
+            res.download(pdfPath, `${data.title}.pdf`, (err) => {
                 if (err) console.error("Download error:", err);
                 fs.unlinkSync(pdfPath); // Hapus file setelah diunduh
             });
         });
+
     } catch (error) {
+        console.error("Error:", error);
         res.status(500).json({
             status: 500,
             dev: "@mysu_019",
-            message: "Terjadi kesalahan.",
+            message: "Terjadi kesalahan saat membuat PDF."
         });
     }
-})
+});
 
 app.get("/api/sfw/loli", async (req, res) => {
     try {
