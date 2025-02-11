@@ -15,32 +15,78 @@ const { sps, yts } = require("./backend/search")
 const { ytdl } = require("./backend/ytdl-core")
 app.set("json spaces", 4)
 
-app.get("api/spodl", async (req, res) => {
-    const { url } = req.query
-    
+app.get("/api/spodl", async (req, res) => {
+    const { url } = req.query;
+
+    // Validasi parameter 'url'
     if (!url) {
         return res.status(400).json({
-          status: 400,
-          dev: "@mysu_019",
-          message: "Parameter 'url' tidak boleh kosong."
+            status: 400,
+            dev: "@mysu_019",
+            message: "Parameter 'url' tidak boleh kosong."
         });
     }
-    try {
-        const response = await axios.get('https://api.agatz.xyz/api/spotifydl?url=' + url)
-        const result = JSON.parse(response.data.data)
-        res.json({
-            status: 200, 
+
+    // Validasi sederhana untuk URL Spotify
+    if (!url.includes("spotify.com")) {
+        return res.status(400).json({
+            status: 400,
             dev: "@mysu_019",
-            data: result
+            message: "URL harus merupakan link Spotify yang valid."
         });
-      } catch (error) {
-        res.status(500).json({
-          status: 500,
-          dev: "@mysu_019",
-          message: "Terjadi kesalahan saat memproses permintaan."
+    }
+
+    try {
+        // Lakukan permintaan ke API eksternal
+        const response = await axios.get('https://api.agatz.xyz/api/spotifydl?url=' + url);
+
+        // Pastikan response.data.data ada dan valid
+        if (!response.data || !response.data.data) {
+            return res.status(500).json({
+                status: 500,
+                dev: "@mysu_019",
+                message: "Respons dari API tidak valid."
+            });
+        }
+
+        // Parse data
+        const result = JSON.parse(response.data.data);
+
+        // Kirim respons ke klien
+        res.json({
+            status: 200,
+            dev: "@mysu_019",
+            data: result,
+            timestamp: new Date().toISOString() // Tambahkan timestamp
         });
-     }
-})
+    } catch (error) {
+        // Tangani error dengan lebih spesifik
+        console.error("Error:", error.message);
+
+        if (error.response) {
+            // Jika error dari API eksternal
+            return res.status(error.response.status).json({
+                status: error.response.status,
+                dev: "@mysu_019",
+                message: "Terjadi kesalahan pada API eksternal."
+            });
+        } else if (error.request) {
+            // Jika tidak ada respons dari API eksternal
+            return res.status(500).json({
+                status: 500,
+                dev: "@mysu_019",
+                message: "Tidak ada respons dari API eksternal."
+            });
+        } else {
+            // Jika error lainnya
+            return res.status(500).json({
+                status: 500,
+                dev: "@mysu_019",
+                message: "Terjadi kesalahan saat memproses permintaan."
+            });
+        }
+    }
+});
 
 app.get("/api/ytmp3", async (req, res) => {
   const { url } = req.query;
