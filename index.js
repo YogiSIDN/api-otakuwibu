@@ -9,7 +9,7 @@ app.use(express.static(path.join(__dirname, "public")))
 // Backend
 const { tinyUrl } = require("./backend/shortURL")
 const { sps, yts } = require("./backend/search")
-const { ytdl } = require("./backend/downloader")
+const { ytdown } = require("./backend/downloader")
 app.set("json spaces", 4)
 
 app.get("/api/ytdl", async (req, res) => {
@@ -22,7 +22,7 @@ app.get("/api/ytdl", async (req, res) => {
         })
     }
     try {
-        const result = await ytdl(url)
+        const result = await ytdown(url)
         res.json(result)
     } catch (error) {
         res.status(500).json({
