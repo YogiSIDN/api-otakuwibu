@@ -7,9 +7,38 @@ app.use(express.json())
 app.use(express.static(path.join(__dirname, "public")))
 
 // Backend
+const { nhSearch, nhDetail } = require("./backend/nhentai")
 const { tinyUrl } = require("./backend/shortURL")
 const { sps, yts } = require("./backend/search")
 app.set("json spaces", 4)
+
+app.get("/api/nsfw/nhentai", async (req, res) => {
+    const { q } = req.query;
+       if (!q) {
+           return res.status(400).json({ 
+               status: 400,
+               dev: "@mysu_019",
+               message: "Query tidak boleh kosong." 
+           });
+       }
+    try {
+        const response = await nhSearch(q)
+        if (!response.data || response.data.length === 0) {
+            return res.status(404).json({
+                status: 404,
+                dev: "@mysu_019",
+                message: "Hasil tidak ditemukan."
+            })
+        }
+        res.json(response)
+    } catch (error) {
+        res.status(500).json({
+               status: 500,
+               dev: "@mysu_019",
+               message: "Terjadi kesalahan."
+           });
+    }
+})
 
 app.get("/api/sfw/loli", async (req, res) => {
     try {
@@ -33,7 +62,7 @@ app.get("/api/sfw/loli", async (req, res) => {
         res.status(500).json({
             status: 500,
             dev: "@mysu_019",
-            message: "Terjadi kesalahan pada.",
+            message: "Terjadi kesalahan.",
         });
     }
 });
