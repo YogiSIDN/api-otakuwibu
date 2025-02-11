@@ -15,7 +15,7 @@ const { sps, yts } = require("./backend/search")
 const { ytdl } = require("./backend/ytdl-core")
 app.set("json spaces", 4)
 
-app.get("api/spotifydl", async (req, res) => {
+app.get("api/spodl", async (req, res) => {
     const { url } = req.query
     
     if (!url) {
