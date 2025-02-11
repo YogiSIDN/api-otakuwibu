@@ -15,6 +15,33 @@ const { sps, yts } = require("./backend/search")
 const { ytdl } = require("./backend/ytdl-core")
 app.set("json spaces", 4)
 
+app.get("api/spotifydl", async (req, res) => {
+    const { url } = req.query
+    
+    if (!url) {
+        return res.status(400).json({
+          status: 400,
+          dev: "@mysu_019",
+          message: "Parameter 'url' tidak boleh kosong."
+        });
+    }
+    try {
+        const response = await axios.get('https://api.agatz.xyz/api/spotifydl?url=' + url)
+        const result = JSON.parse(response.data.data)
+        res.json({
+            status: 200, 
+            dev: "@mysu_019",
+            data: result
+        });
+      } catch (error) {
+        res.status(500).json({
+          status: 500,
+          dev: "@mysu_019",
+          message: "Terjadi kesalahan saat memproses permintaan."
+        });
+     }
+})
+
 app.get("/api/ytmp3", async (req, res) => {
   const { url } = req.query;
 
