@@ -9,7 +9,29 @@ app.use(express.static(path.join(__dirname, "public")))
 // Backend
 const { tinyUrl } = require("./backend/shortURL")
 const { sps, yts } = require("./backend/search")
+const { ytdl } = require("./backend/downloader")
 app.set("json spaces", 4)
+
+app.get("/api/ytdl", async (req, res) => {
+    const { url } = req.query
+    if (!url) {
+        return res.status(400).json({ 
+            status: 400,
+            dev: "@mysu_019",
+            message: "Url tidak boleh kosong." 
+        })
+    }
+    try {
+        const result = await ytdl(url)
+        res.json(result)
+    } catch (error) {
+        res.status(500).json({
+               status: 500,
+               dev: "@mysu_019",
+               message: "Terjadi kesalahan."
+           });
+    }
+})
 
 app.get("/api/sfw/loli", async (req, res) => {
     try {
