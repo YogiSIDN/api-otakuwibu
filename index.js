@@ -15,7 +15,7 @@ const { sps, yts } = require("./backend/search")
 const { ytdl } = require("./backend/ytdl-core")
 app.set("json spaces", 4)
 
-const API_KEYS = new Set(["mysu"]);
+const API_KEY = new Set(["mysu"]);
    const validateApiKey = (req, res, next) => {
        const apiKey = req.headers['x-api-key'] || req.query.apiKey;
 
