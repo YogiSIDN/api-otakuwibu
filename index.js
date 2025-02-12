@@ -15,11 +15,11 @@ const { sps, yts } = require("./backend/search")
 const { ytdl } = require("./backend/ytdl-core")
 app.set("json spaces", 4)
 
-const API_KEY = new Set(["mysu"]);
+const API_KEY = "mysu"
    const validateApiKey = (req, res, next) => {
-       const apiKey = req.headers['x-api-key'] || req.query.apiKey;
+       const apikey = req.headers['x-api-key'] || req.query.apikey;
 
-       if (!apiKey) {
+       if (!apikey) {
            return res.status(401).json({
                status: 401,
                dev: "@mysu_019",
@@ -27,7 +27,7 @@ const API_KEY = new Set(["mysu"]);
            });
        }
 
-       if (apiKey !== API_KEY) {
+       if (apikey !== API_KEY) {
            return res.status(403).json({
                status: 403,
                dev: "@mysu_019",
