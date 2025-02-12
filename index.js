@@ -15,10 +15,32 @@ const { sps, yts } = require("./backend/search")
 const { ytdl } = require("./backend/ytdl-core")
 app.set("json spaces", 4)
 
-app.get("/api/spodl", async (req, res) => {
-    const { url } = req.query;
+const API_KEY = "Beta"; 
 
-    // Validasi parameter 'url'
+   const checkApiKey = (req, res, next) => {
+       const apiKey = req.headers['x-api-key'] || req.query.apiKey;
+
+       if (!apiKey) {
+           return res.status(401).json({
+               status: 401,
+               dev: "@mysu_019",
+               message: "API key diperlukan."
+           });
+       }
+
+       if (apiKey !== API_KEY) {
+           return res.status(403).json({
+               status: 403,
+               dev: "@mysu_019",
+               message: "API key tidak valid."
+           });
+       }
+
+       next();
+   };
+
+app.get("/api/spodl", checkApiKey, async (req, res) => {
+    const { url } = req.query;'
     if (!url) {
         return res.status(400).json({
             status: 400,
@@ -26,8 +48,6 @@ app.get("/api/spodl", async (req, res) => {
             message: "Parameter 'url' tidak boleh kosong."
         });
     }
-
-    // Validasi sederhana untuk URL Spotify
     if (!url.includes("spotify.com")) {
         return res.status(400).json({
             status: 400,
@@ -35,12 +55,8 @@ app.get("/api/spodl", async (req, res) => {
             message: "URL harus merupakan link Spotify yang valid."
         });
     }
-
     try {
-        // Lakukan permintaan ke API eksternal
         const response = await axios.get('https://api.agatz.xyz/api/spotifydl?url=' + url);
-
-        // Pastikan response.data.data ada dan valid
         if (!response.data || !response.data.data) {
             return res.status(500).json({
                 status: 500,
@@ -48,37 +64,26 @@ app.get("/api/spodl", async (req, res) => {
                 message: "Respons dari API tidak valid."
             });
         }
-
-        // Parse data
         const result = JSON.parse(response.data.data);
-
-        // Kirim respons ke klien
         res.json({
             status: 200,
             dev: "@mysu_019",
-            data: result,
-            timestamp: new Date().toISOString() // Tambahkan timestamp
+            data: result
         });
     } catch (error) {
-        // Tangani error dengan lebih spesifik
-        console.error("Error:", error.message);
-
         if (error.response) {
-            // Jika error dari API eksternal
             return res.status(error.response.status).json({
                 status: error.response.status,
                 dev: "@mysu_019",
                 message: "Terjadi kesalahan pada API eksternal."
             });
         } else if (error.request) {
-            // Jika tidak ada respons dari API eksternal
             return res.status(500).json({
                 status: 500,
                 dev: "@mysu_019",
                 message: "Tidak ada respons dari API eksternal."
             });
         } else {
-            // Jika error lainnya
             return res.status(500).json({
                 status: 500,
                 dev: "@mysu_019",
@@ -88,7 +93,7 @@ app.get("/api/spodl", async (req, res) => {
     }
 });
 
-app.get("/api/ytmp3", async (req, res) => {
+app.get("/api/ytmp3", checkApiKey, async (req, res) => {
   const { url } = req.query;
 
   if (!url) {
@@ -111,7 +116,7 @@ app.get("/api/ytmp3", async (req, res) => {
   }
 });
 
-app.get("/api/ytmp4", async (req, res) => {
+app.get("/api/ytmp4", checkApiKey, async (req, res) => {
   const { url } = req.query;
 
   if (!url) {
@@ -134,7 +139,7 @@ app.get("/api/ytmp4", async (req, res) => {
   }
 });
 
-app.get("/api/nsfw/nhsearch", async (req, res) => {
+app.get("/api/nsfw/nhsearch", checkApiKey, async (req, res) => {
     const { q } = req.query;
        if (!q) {
            return res.status(400).json({ 
@@ -162,7 +167,7 @@ app.get("/api/nsfw/nhsearch", async (req, res) => {
     }
 })
 
-app.get("/api/nsfw/nhdetail", async (req, res) => {
+app.get("/api/nsfw/nhdetail", checkApiKey, async (req, res) => {
     const { id } = req.query;
        if (!id) {
            return res.status(400).json({ 
@@ -183,7 +188,7 @@ app.get("/api/nsfw/nhdetail", async (req, res) => {
     }
 })
 
-app.get("/api/sfw/loli", async (req, res) => {
+app.get("/api/sfw/loli", checkApiKey, async (req, res) => {
     try {
         const pilihan = ["loli", "goth-loli", "lolita_fashion"];
         const hasilAcak = pilihan[Math.floor(Math.random() * pilihan.length)];
@@ -210,7 +215,7 @@ app.get("/api/sfw/loli", async (req, res) => {
     }
 });
 
-app.get("/api/sfw/neko", async (req, res) => {
+app.get("/api/sfw/neko", checkApiKey, async (req, res) => {
     try {
         const jsonResponse = await axios.get("https://api.waifu.pics/sfw/neko");
         const imageUrl = jsonResponse.data.url;
@@ -227,7 +232,7 @@ app.get("/api/sfw/neko", async (req, res) => {
     }
 });
 
-app.get("/api/sfw/waifu", async (req, res) => {
+app.get("/api/sfw/waifu", checkApiKey, async (req, res) => {
     try {
         const jsonResponse = await axios.get("https://api.waifu.pics/sfw/waifu");
         const imageUrl = jsonResponse.data.url;
@@ -244,7 +249,7 @@ app.get("/api/sfw/waifu", async (req, res) => {
     }
 });
 
-app.get("/api/spotifySearch", async (req, res) => {
+app.get("/api/spotifySearch", checkApiKey, async (req, res) => {
     const { q } = req.query;
 
     if (!q) {
@@ -267,7 +272,7 @@ app.get("/api/spotifySearch", async (req, res) => {
     }
 });
 
-app.get("/api/yts", async (req, res) => {
+app.get("/api/yts", checkApiKey, async (req, res) => {
        const { q } = req.query;
        if (!q) {
            return res.status(400).json({ 
@@ -291,7 +296,7 @@ app.get("/api/yts", async (req, res) => {
        }
 })
    
-app.get("/api/tinyUrl", async (req, res) => {
+app.get("/api/tinyUrl", checkApiKey, async (req, res) => {
     const { url } = req.query
     if (!url) {
         return res.status(400).json({ 
