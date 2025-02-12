@@ -39,6 +39,8 @@ const API_KEY = "Beta";
        next();
    };
 
+app.use(checkApiKey)
+
 app.get("/api/spodl", checkApiKey, async (req, res) => {
     const { url } = req.query;'
     if (!url) {
