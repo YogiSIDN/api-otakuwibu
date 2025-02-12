@@ -16,20 +16,27 @@ const { ytdl } = require("./backend/ytdl-core")
 app.set("json spaces", 4)
 
 const API_KEYS = new Set(["mysu"]);
+   const checkApiKey = (req, res, next) => {
+       const apiKey = req.headers['x-api-key'] || req.query.apiKey;
 
-const validateApiKey = (req, res, next) => {
-    const apiKey = req.query.apikey || req.headers["x-api-key"];
+       if (!apiKey) {
+           return res.status(401).json({
+               status: 401,
+               dev: "@mysu_019",
+               message: "API key diperlukan."
+           });
+       }
 
-    if  (!apiKey || !API_KEYS.has(apiKey)) {
-        return res.status(403).json({
-            status: 403,
-            dev: "@mysu_019",
-            message: "API Key tidak valid atau tidak disertakan."
-        });
-    }
+       if (apiKey !== API_KEY) {
+           return res.status(403).json({
+               status: 403,
+               dev: "@mysu_019",
+               message: "API key tidak valid."
+           });
+       }
 
-    next();
-};
+       next();
+   };
 
 app.use("/api", validateApiKey)
 
