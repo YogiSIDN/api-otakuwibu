@@ -15,33 +15,25 @@ const { sps, yts } = require("./backend/search")
 const { ytdl } = require("./backend/ytdl-core")
 app.set("json spaces", 4)
 
-const API_KEY = "Beta"; 
+const API_KEYS = ["Beta"]; // Daftar API key yang diizinkan
 
-   const checkApiKey = (req, res, next) => {
-       const apiKey = req.headers['x-api-key'] || req.query.apiKey;
+const validateApiKey = (req, res, next) => {
+    const apiKey = req.query.apikey || req.headers["x-api-key"];
 
-       if (!apiKey) {
-           return res.status(401).json({
-               status: 401,
-               dev: "@mysu_019",
-               message: "API key diperlukan."
-           });
-       }
+    if (!apiKey || !API_KEYS.includes(apiKey)) {
+        return res.status(403).json({
+            status: 403,
+            dev: "@mysu_019",
+            message: "API Key tidak valid atau tidak disertakan."
+        });
+    }
 
-       if (apiKey !== API_KEY) {
-           return res.status(403).json({
-               status: 403,
-               dev: "@mysu_019",
-               message: "API key tidak valid."
-           });
-       }
+    next();
+};
 
-       next();
-   };
+app.use("/api", validateApiKey)
 
-app.use("/api", checkApiKey)
-
-app.get("/api/spodl", checkApiKey, async (req, res) => {
+app.get("/api/spodl", validateApiKey, async (req, res) => {
     const { url } = req.query;
     if (!url) {
         return res.status(400).json({
@@ -95,7 +87,7 @@ app.get("/api/spodl", checkApiKey, async (req, res) => {
     }
 });
 
-app.get("/api/ytmp3", checkApiKey, async (req, res) => {
+app.get("/api/ytmp3", validateApiKey, async (req, res) => {
   const { url } = req.query;
 
   if (!url) {
@@ -118,7 +110,7 @@ app.get("/api/ytmp3", checkApiKey, async (req, res) => {
   }
 });
 
-app.get("/api/ytmp4", checkApiKey, async (req, res) => {
+app.get("/api/ytmp4", validateApiKey, async (req, res) => {
   const { url } = req.query;
 
   if (!url) {
@@ -141,7 +133,7 @@ app.get("/api/ytmp4", checkApiKey, async (req, res) => {
   }
 });
 
-app.get("/api/nsfw/nhsearch", checkApiKey, async (req, res) => {
+app.get("/api/nsfw/nhsearch", validateApiKey, async (req, res) => {
     const { q } = req.query;
        if (!q) {
            return res.status(400).json({ 
@@ -169,7 +161,7 @@ app.get("/api/nsfw/nhsearch", checkApiKey, async (req, res) => {
     }
 })
 
-app.get("/api/nsfw/nhdetail", checkApiKey, async (req, res) => {
+app.get("/api/nsfw/nhdetail", validateApiKey, async (req, res) => {
     const { id } = req.query;
        if (!id) {
            return res.status(400).json({ 
@@ -190,7 +182,7 @@ app.get("/api/nsfw/nhdetail", checkApiKey, async (req, res) => {
     }
 })
 
-app.get("/api/sfw/loli", checkApiKey, async (req, res) => {
+app.get("/api/sfw/loli", validateApiKey, async (req, res) => {
     try {
         const pilihan = ["loli", "goth-loli", "lolita_fashion"];
         const hasilAcak = pilihan[Math.floor(Math.random() * pilihan.length)];
@@ -217,7 +209,7 @@ app.get("/api/sfw/loli", checkApiKey, async (req, res) => {
     }
 });
 
-app.get("/api/sfw/neko", checkApiKey, async (req, res) => {
+app.get("/api/sfw/neko", validateApiKey, async (req, res) => {
     try {
         const jsonResponse = await axios.get("https://api.waifu.pics/sfw/neko");
         const imageUrl = jsonResponse.data.url;
@@ -234,7 +226,7 @@ app.get("/api/sfw/neko", checkApiKey, async (req, res) => {
     }
 });
 
-app.get("/api/sfw/waifu", checkApiKey, async (req, res) => {
+app.get("/api/sfw/waifu", validateApiKey, async (req, res) => {
     try {
         const jsonResponse = await axios.get("https://api.waifu.pics/sfw/waifu");
         const imageUrl = jsonResponse.data.url;
@@ -251,7 +243,7 @@ app.get("/api/sfw/waifu", checkApiKey, async (req, res) => {
     }
 });
 
-app.get("/api/spotifySearch", checkApiKey, async (req, res) => {
+app.get("/api/spotifySearch", validateApiKey, async (req, res) => {
     const { q } = req.query;
 
     if (!q) {
@@ -274,7 +266,7 @@ app.get("/api/spotifySearch", checkApiKey, async (req, res) => {
     }
 });
 
-app.get("/api/yts", checkApiKey, async (req, res) => {
+app.get("/api/yts", validateApiKey, async (req, res) => {
        const { q } = req.query;
        if (!q) {
            return res.status(400).json({ 
@@ -298,7 +290,7 @@ app.get("/api/yts", checkApiKey, async (req, res) => {
        }
 })
    
-app.get("/api/tinyUrl", checkApiKey, async (req, res) => {
+app.get("/api/tinyUrl", validateApiKey, async (req, res) => {
     const { url } = req.query
     if (!url) {
         return res.status(400).json({ 
