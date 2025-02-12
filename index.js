@@ -15,12 +15,12 @@ const { sps, yts } = require("./backend/search")
 const { ytdl } = require("./backend/ytdl-core")
 app.set("json spaces", 4)
 
-const API_KEYS = ["Beta"]; // Daftar API key yang diizinkan
+const API_KEYS = new Set(["Beta"]);
 
 const validateApiKey = (req, res, next) => {
     const apiKey = req.query.apikey || req.headers["x-api-key"];
 
-    if (!apiKey || !API_KEYS.includes(apiKey)) {
+    if  (!apiKey || !API_KEYS.has(apiKey)) {
         return res.status(403).json({
             status: 403,
             dev: "@mysu_019",
