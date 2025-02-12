@@ -42,7 +42,7 @@ const API_KEY = "Beta";
 app.use(checkApiKey)
 
 app.get("/api/spodl", checkApiKey, async (req, res) => {
-    const { url } = req.query;'
+    const { url } = req.query;
     if (!url) {
         return res.status(400).json({
             status: 400,
