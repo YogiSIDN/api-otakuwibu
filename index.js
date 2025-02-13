@@ -9,6 +9,7 @@ app.use(express.json())
 app.use(express.static(path.join(__dirname, "public")))
 
 // Backend
+const { igSearch, igStalk } = require("./backend/instagram")
 const { nhSearch, nhDetail } = require("./backend/nhentai")
 const { tinyUrl } = require("./backend/shortURL")
 const { sps, yts } = require("./backend/search")
@@ -241,6 +242,52 @@ app.get("/api/sfw/waifu", validateApiKey, async (req, res) => {
 
         res.setHeader("Content-Type", "image/jpeg");
         res.send(imageResponse.data);
+    } catch (error) {
+        res.status(500).json({
+            status: 500,
+            dev: "@mysu_019",
+            message: "Terjadi kesalahan."
+        });
+    }
+});
+
+app.get("/api/igStalk", validateApiKey, async (req, res) => {
+    const { username } = req.query;
+
+    if (!username) {
+        return res.status(400).json({ 
+            status: 400,
+            dev: "@mysu_019",
+            message: "Parameter 'username' tidak boleh kosong." 
+        });
+    }
+
+    try {
+        const result = await stalk(username);
+        res.status(result.status).json(result);
+    } catch (error) {
+        res.status(500).json({
+            status: 500,
+            dev: "@mysu_019",
+            message: "Terjadi kesalahan."
+        });
+    }
+});
+
+app.get("/api/igSearch", validateApiKey, async (req, res) => {
+    const { q } = req.query;
+
+    if (!q) {
+        return res.status(400).json({ 
+            status: 400,
+            dev: "@mysu_019",
+            message: "Parameter 'q' tidak boleh kosong." 
+        });
+    }
+
+    try {
+        const result = await iGsearch(q);
+        res.status(result.status).json(result);
     } catch (error) {
         res.status(500).json({
             status: 500,
