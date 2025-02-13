@@ -19,8 +19,9 @@ async function extractPost(array) {
         }).catch(e => e.response);
 
         if (request.status !== 200) return Promise.reject({
-            msg: "Failed to fetch post data!",
-            url
+            dev: "@mysu_019",
+            message: "Pengguna tidak dapat ditemukan."
+                
         });
 
         let $ = cheerio.load(request.data);
@@ -108,7 +109,7 @@ async function igStalk(username) {
             ) {
                 reject({
                     status: 500,
-                    dev: "@mysu_019,
+                    dev: "@mysu_019",
                     message: "Pengguna tidak dapat ditemukan"
                 });
             } else {
@@ -136,8 +137,9 @@ async function igSearch(username) {
             }).catch(e => e.response);
 
             if (request.status !== 200) return reject({
-                msg: "Failed to fetch search data!",
-                error: request
+                dev: "@mysu_019",
+                message: "Pengguna tidak dapat ditemukan."
+                
             });
 
             let $ = cheerio.load(request.data);
@@ -155,13 +157,13 @@ async function igSearch(username) {
             if (result.length === 0) {
                 reject({
                     status: 500,
-                    dev: "@mysu_019,
+                    dev: "@mysu_019",
                     message: "Pengguna tidak dapat ditemukan."
                 });
             } else {
                 resolve({
                     status: 200,
-                    dev: "@mysu_019,
+                    dev: "@mysu_019",
                     data: result
                 });
             }
