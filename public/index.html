@@ -23,8 +23,8 @@
         }
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #ffffff;
-            color: #000000;
+            background-color: #121212;
+            color: #ffffff;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -35,7 +35,7 @@
             width: 100%;
             margin: 0 auto;
             padding: 20px;
-            background-color: #ffffff;
+            background-color: #1e1e1e;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
@@ -64,31 +64,30 @@
             width: 100%;
             border-collapse: collapse;
             margin: 20px 0;
-            background-color: #0352ab;
+            background-color: #2b2b2b;
             border-radius: 10px;
             overflow: hidden;
         }
         th, td {
             padding: 15px;
             text-align: left;
-            color: ffffff;
-            border-right: 1px solid #0255b5;
+            border-right: 1px solid #333333;
         }
         th {
-            background-color: #0255b5;
+            background-color: #333333;
             font-weight: bold;
         }
         th:last-child, td:last-child {
             border-right: none;
         }
         tr:nth-child(even) {
-            background-color: #00418a;
+            background-color: #242424;
         }
         tr:hover {
-            background-color: #0255b5;
+            background-color: #333333;
         }
         a {
-            color: #ffffff;
+            color: #1e90ff;
             text-decoration: none;
             transition: color 0.3s;
         }
@@ -100,7 +99,7 @@
             padding: 10px 0;
             text-align: center;
             font-size: 0.9rem;
-            color: #000000;
+            color: #bbbbbb;
         }
         @media (max-width: 900px) {
             h1 {
@@ -161,7 +160,27 @@
             opacity: 1; 
             transform: translateY(0);
         }
-l
+        .instagram-button {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.instagram-button button {
+    background-color: #25D366; 
+    color: #ffffff;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.instagram-button button:hover {
+    background-color: #1EBE57;
+    transform: scale(1.05);
+}
 
 
     </style>
@@ -176,7 +195,13 @@ l
         <!-- <div id="MyClockDisplay" class="clock"></div> -->
         <div class="description">
             Rest API ini dirancang untuk BOT WhatsApp yang saya kembangkan.
+            Klik tombol di bawah untuk menguji fiturnya.
             apikey: mysu
+            <div class="instagram-button">
+    <a href="https://wa.me/6281410404318" target="_blank">
+        <button>WhatsApp</button>
+    </a>
+</div>
             <h3>Anime & Manga</h3>
             <table>
                 <thead>
@@ -252,37 +277,6 @@ l
                     </tr>
                     </tbody>
             </table>
-            <h3>Random Image</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Name</th>
-                        <th>Method</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1.</td>
-                        <td>Loli Random</td>
-                        <td>GET</td>
-                        <td><a href="/api/sfw/loli?apikey=">[ ➠ ]</a></td>
-                    </tr>
-                    <tr>
-                        <td>2.</td>
-                        <td>Neko Random</td>
-                        <td>GET</td>
-                        <td><a href="/api/sfw/neko?apikey=">[ ➠ ]</a></td>
-                    </tr>
-                    <tr>
-                        <td>3.</td>
-                        <td>Waifu Random</td>
-                        <td>GET</td>
-                        <td><a href="/api/sfw/waifu?apikey=">[ ➠ ]</a></td>
-                    </tr>
-                    </tbody>
-            </table>
             <h3>Search</h3>
             <table>
                 <thead>
@@ -311,6 +305,37 @@ l
                         <td>Youtube Search</td>
                         <td>GET</td>
                         <td><a href="/api/yts?q=die with a smile&apikey=">[ ➠ ]</a></td>
+                    </tr>
+                    </tbody>
+            </table>
+            <h3>SFW Content</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Name</th>
+                        <th>Method</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1.</td>
+                        <td>Loli Random</td>
+                        <td>GET</td>
+                        <td><a href="/api/sfw/loli?apikey=">[ ➠ ]</a></td>
+                    </tr>
+                    <tr>
+                        <td>2.</td>
+                        <td>Neko Random</td>
+                        <td>GET</td>
+                        <td><a href="/api/sfw/neko?apikey=">[ ➠ ]</a></td>
+                    </tr>
+                    <tr>
+                        <td>3.</td>
+                        <td>Waifu Random</td>
+                        <td>GET</td>
+                        <td><a href="/api/sfw/waifu?apikey=">[ ➠ ]</a></td>
                     </tr>
                     </tbody>
             </table>
