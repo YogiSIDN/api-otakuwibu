@@ -251,6 +251,40 @@ app.get("/api/sfw/waifu", validateApiKey, async (req, res) => {
     }
 });
 
+app.get("/api/tiktok", validateApiKey, async (req, res) => {
+    const { username } = req.query;
+
+    if (!username) {
+        return res.status(400).json({ 
+            status: 400,
+            dev: "@mysu_019",
+            message: "Parameter 'username' tidak boleh kosong." 
+        });
+    }
+
+    try {
+        const result = await axios.get("https://api.nasirxml.my.id/stalk/tiktok?username=" + username)
+        if (result.data.status !== 200) {
+            return res.status(result.data.status).json({
+                status: false
+                dev: "@mysu_019",
+                message: "Terjadi kesalahan."
+            })
+        }
+        res.status(result.data.status).json({
+            status: 200,
+            dev: "@mysu_019",
+            data: result.data.result
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 500,
+            dev: "@mysu_019",
+            message: "Terjadi kesalahan."
+        });
+    }
+});
+
 app.get("/api/igStalk", validateApiKey, async (req, res) => {
     const { username } = req.query;
 
