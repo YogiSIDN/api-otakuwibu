@@ -235,6 +235,7 @@ app.get("/api/animedetail", validateApiKey, async (req, res) => {
     try {
         const response = await axios.get("https://api.jikan.moe/v4/anime/" + id)
         const jsonResponse = response.data
+        const { data } = jsonResponse
         res.status(jsonResponse.status).json({
             status: 404,
             dev: "@mysu_019",
@@ -243,7 +244,7 @@ app.get("/api/animedetail", validateApiKey, async (req, res) => {
         res.json({
             status: 200,
             dev: "@mysu_019",
-            data: jsonResponse.data
+            data: data
         })
     } catch (error) {
         res.status(500).json({
