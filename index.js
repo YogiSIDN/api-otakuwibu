@@ -223,7 +223,7 @@ app.get("/api/anime", validateApiKey, async (req, res) => {
     }
 })
 
-app.get("/api/anime", validateApiKey, async (req, res) => {
+app.get("/api/animedetail", validateApiKey, async (req, res) => {
     const { id } = req.query
     if (!id) {
         return res.status(400).json({ 
