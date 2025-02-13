@@ -70,7 +70,7 @@ async function igStalk(username) {
             let array = [];
             let result = {
                 status: 200,
-                dev: "@mysu_019,
+                dev: "@mysu_019",
                 metadata: {
                     name: $(".items-top h2").text().trim(),
                     username: $(".items-top h1").text().trim(),
