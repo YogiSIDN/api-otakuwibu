@@ -266,7 +266,7 @@ app.get("/api/tiktok", validateApiKey, async (req, res) => {
         const result = await axios.get("https://api.nasirxml.my.id/stalk/tiktok?username=" + username)
         if (result.data.status !== 200) {
             return res.status(result.data.status).json({
-                status: false
+                status: false,
                 dev: "@mysu_019",
                 message: "Terjadi kesalahan."
             })
