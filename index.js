@@ -344,6 +344,83 @@ app.get("/api/chardetail", async (req, res) => {
     }
 });
 
+app.get("/api/manga", validateApiKey, async (req, res) => {
+    const { q } = req.query
+    if (!q) {
+        return res.status(400).json({ 
+               status: 400,
+               dev: "@mysu_019",
+               message: "Parameter 'q' tidak boleh kosong." 
+           }); 
+    }
+    try {
+        const response = await axios.get("https://api.jikan.moe/v4/manga?q=" + q + "&order_by=favorites&limit=10&sort=desc")
+        const jsonResponse = response.data.data
+        if (!jsonResponse || jsonResponse.length === 0) {
+            return res.status(404).json({
+                status: 404,
+                dev: "@mysu_019",
+                message: "manga tidak ditemukan."
+            });
+        }
+        res.json({
+            status: 200,
+            dev: "@mysu_019",
+            data: jsonResponse
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 500,
+            dev: "@mysu_019",
+            message: "Terjadi kesalahan."
+        });
+    }
+})
+
+app.get("/api/mangadetail", async (req, res) => {
+    const { id } = req.query;
+
+    if (!id) {
+        return res.status(400).json({
+            status: 400,
+            dev: "@mysu_019",
+            message: "Parameter 'id' tidak boleh kosong."
+        });
+    }
+
+    try {
+        const response = await axios.get(`https://api.jikan.moe/v4/manga/${id}`);
+        const { data } = response.data;
+
+        if (!data) {
+            return res.status(404).json({
+                status: 404,
+                dev: "@mysu_019",
+                message: "Manga tidak ditemukan."
+            });
+        }
+
+        res.json({
+            status: 200,
+            dev: "@mysu_019",
+            data: data
+        });
+    } catch (error) {
+        if (error.response && error.response.status === 404) {
+            return res.status(404).json({
+                status: 404,
+                dev: "@mysu_019",
+                message: "Manga tidak ditemukan."
+            });
+        }
+        res.status(500).json({
+            status: 500,
+            dev: "@mysu_019",
+            message: "Terjadi kesalahan pada server."
+        });
+    }
+});
+
 
 app.get("/api/sfw/loli", validateApiKey, async (req, res) => {
     try {
