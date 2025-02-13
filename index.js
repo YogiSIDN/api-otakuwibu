@@ -223,37 +223,49 @@ app.get("/api/anime", validateApiKey, async (req, res) => {
     }
 })
 
-app.get("/api/animedetail", validateApiKey, async (req, res) => {
-    const { id } = req.query
+app.get("/api/animedetail", async (req, res) => {
+    const { id } = req.query;
+
     if (!id) {
-        return res.status(400).json({ 
+        return res.status(400).json({
             status: 400,
             dev: "@mysu_019",
-            message: "Parameter 'id' tidak boleh kosong." 
-        }); 
+            message: "Parameter 'id' tidak boleh kosong."
+        });
     }
+
     try {
-        const response = await axios.get("https://api.jikan.moe/v4/anime/" + id)
-        const jsonResponse = response.data
-        const { data } = jsonResponse
-        res.status(jsonResponse.status).json({
-            status: 404,
-            dev: "@mysu_019",
-            message: "Anime tidak ditemukan."
-        })
+        const response = await axios.get(`https://api.jikan.moe/v4/anime/${id}`);
+        const { data } = response.data;
+
+        if (!data) {
+            return res.status(404).json({
+                status: 404,
+                dev: "@mysu_019",
+                message: "Anime tidak ditemukan."
+            });
+        }
+
         res.json({
             status: 200,
             dev: "@mysu_019",
             data: data
-        })
+        });
     } catch (error) {
+        if (error.response && error.response.status === 404) {
+            return res.status(404).json({
+                status: 404,
+                dev: "@mysu_019",
+                message: "Anime tidak ditemukan."
+            });
+        }
         res.status(500).json({
             status: 500,
             dev: "@mysu_019",
-            message: "Terjadi kesalahan."
+            message: "Terjadi kesalahan pada server."
         });
     }
-})
+});
 
 app.get("/api/sfw/loli", validateApiKey, async (req, res) => {
     try {
