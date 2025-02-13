@@ -39,7 +39,7 @@ const API_KEY = "mysu"
        next();
    };
 
-app.use("/api", validateApiKey)
+app.use(validateApiKey)
 
 app.get("/api/spodl", validateApiKey, async (req, res) => {
     const { url } = req.query;
@@ -190,6 +190,39 @@ app.get("/api/nsfw/nhdetail", validateApiKey, async (req, res) => {
     }
 })
 
+app.get("/api/anime", validateApiKey, async (req, res) => {
+    const { q } = req.query
+    if (!q) {
+        return res.status(400).json({ 
+               status: 400,
+               dev: "@mysu_019",
+               message: "Parameter 'q' tidak boleh kosong." 
+           }); 
+    }
+    try {
+        const response = await axios.get("https://api.jikan.moe/v4/anime?q=" + q + "O&order_by=favorites&limit=10&sort=desc")
+        const jsonResponse = response.data.data
+        if (!jsonResponse || jsonResponse.length === 0) {
+            return res.status(404).json({
+                status: 404,
+                dev: "@mysu_019",
+                message: "Anime tidak ditemukan."
+            });
+        }
+        res.json({
+            status: 200,
+            dev: "@mysu_019",
+            data: jsonResponse
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 500,
+            dev: "@mysu_019",
+            message: "Terjadi kesalahan."
+        });
+    }
+})
+
 app.get("/api/sfw/loli", validateApiKey, async (req, res) => {
     try {
         const pilihan = ["loli", "goth-loli", "lolita_fashion"];
@@ -242,40 +275,6 @@ app.get("/api/sfw/waifu", validateApiKey, async (req, res) => {
 
         res.setHeader("Content-Type", "image/jpeg");
         res.send(imageResponse.data);
-    } catch (error) {
-        res.status(500).json({
-            status: 500,
-            dev: "@mysu_019",
-            message: "Terjadi kesalahan."
-        });
-    }
-});
-
-app.get("/api/tiktok", validateApiKey, async (req, res) => {
-    const { username } = req.query;
-
-    if (!username) {
-        return res.status(400).json({ 
-            status: 400,
-            dev: "@mysu_019",
-            message: "Parameter 'username' tidak boleh kosong." 
-        });
-    }
-
-    try {
-        const result = await axios.get("https://api.nasirxml.my.id/stalk/tiktok?username=" + username)
-        if (result.data.status !== 200) {
-            return res.status(result.data.status).json({
-                status: false,
-                dev: "@mysu_019",
-                message: "Terjadi kesalahan."
-            })
-        }
-        res.status(result.data.status).json({
-            status: 200,
-            dev: "@mysu_019",
-            data: result.data.result
-        });
     } catch (error) {
         res.status(500).json({
             status: 500,
