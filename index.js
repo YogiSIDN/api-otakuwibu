@@ -263,7 +263,7 @@ app.get("/api/igStalk", validateApiKey, async (req, res) => {
     }
 
     try {
-        const result = await stalk(username);
+        const result = await igStalk(username);
         res.status(result.status).json(result);
     } catch (error) {
         res.status(500).json({
@@ -286,7 +286,7 @@ app.get("/api/igSearch", validateApiKey, async (req, res) => {
     }
 
     try {
-        const result = await iGsearch(q);
+        const result = await igSearch(q);
         res.status(result.status).json(result);
     } catch (error) {
         res.status(500).json({
