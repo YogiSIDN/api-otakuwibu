@@ -486,6 +486,26 @@ app.get("/api/sfw/neko", validateApiKey, async (req, res) => {
     }
 });
 
+app.get("/api/sfw/uniform", validateApiKey, async (req, res) => {
+    try {
+        const jsonResponse = await axios.get("https://api.waifu.im/search/?included_tags=uniform");
+        const imageUrl = jsonResponse.data.images[0].url; // Perbaikan di sini
+        const imageResponse = await axios.get(imageUrl, { responseType: "arraybuffer" });
+
+        // Set Content-Type sesuai dengan ekstensi file yang sebenarnya
+        const extension = jsonResponse.data.images[0].extension;
+        res.setHeader("Content-Type", `image/${extension.replace('.', '')}`); // Menghapus titik dari ekstensi
+        res.send(imageResponse.data);
+    } catch (error) {
+        console.error(error); // Mencetak error untuk debugging
+        res.status(500).json({
+            status: 500,
+            dev: "@mysu_019",
+            message: "Terjadi kesalahan."
+        });
+    }
+});
+
 app.get("/api/sfw/waifu", validateApiKey, async (req, res) => {
     try {
         const jsonResponse = await axios.get("https://api.waifu.pics/sfw/waifu");
