@@ -449,6 +449,23 @@ app.get("/api/sfw/loli", validateApiKey, async (req, res) => {
     }
 });
 
+app.get("/api/sfw/maid", validateApiKey, async (req, res) => {
+    try {
+        const jsonResponse = await axios.get("https://api.waifu.im/search/?included_tags=maid");
+        const imageUrl = jsonResponse.data.maid.images[0].url
+        const imageResponse = await axios.get(imageUrl, { responseType: "arraybuffer" });
+
+        res.setHeader("Content-Type", "image/jpeg");
+        res.send(imageResponse.data);
+    } catch (error) {
+        res.status(500).json({
+            status: 500,
+            dev: "@mysu_019",
+            message: "Terjadi kesalahan."
+        });
+    }
+});
+
 app.get("/api/sfw/neko", validateApiKey, async (req, res) => {
     try {
         const jsonResponse = await axios.get("https://api.waifu.pics/sfw/neko");
